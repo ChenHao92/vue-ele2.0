@@ -7,11 +7,11 @@
 <template>
   <div class="rating-select">
     <div class="rating-type">
-      <span class="all" :class="{'highlight': selectType===2}" @click="changeSelectType(2, $event)">{{desc.all}} <span class="count">{{ratings.length}}</span></span>
+      <span class="all" :class="{'highlight': selectType===2}" @click.stop="changeSelectType(2, $event)">{{desc.all}} <span class="count">{{ratings.length}}</span></span>
       <span class="positive" :class="{'highlight': selectType===0}" @click="changeSelectType(0, $event)">{{desc.positive}} <span class="count">{{positive.length}}</span></span>
       <span class="negative" :class="{'highlight': selectType===1}" @click="changeSelectType(1, $event)">{{desc.negative}} <span class="count">{{negative.length}}</span></span>
     </div>
-    <div class="switch" @click="showOnlyContent($event)" :class="{'highlight': isOnlyContent === true}">
+    <div class="switch" @click.stop.prevent="showOnlyContent($event)" :class="{'highlight': isOnlyContent === true}">
       <i class="icon-check_circle"></i>
       <span>只看有内容的评价</span>
     </div>
@@ -31,16 +31,6 @@
           return [];
         }
       },
-      // 显示的评价类型
-      selectType: {
-        type: Number,
-        default: ALL
-      },
-      // 是否只显示有内容的评价
-      isOnlyContent: {
-        type: Boolean,
-        default: true
-      },
       // 按钮描述文字
       desc: {
         type: Object,
@@ -58,15 +48,14 @@
         if (!event._constructed) {
           return;
         }
-       this.selectType = type;
-       this.$dispatch('ratingTypeChanged', type);
+       this.$store.commit('setSelectType', type);
       },
       showOnlyContent (event) {
         if (!event._constructed) {
           return;
         }
-        this.isOnlyContent = !this.isOnlyContent;
-        this.$dispatch('isOnlyContentChanged', this.isOnlyContent);
+        this.$store.commit('toggleIsOnlyContent');
+        console.log("showOnlyContent");
       }
     },
     computed: {
@@ -80,6 +69,12 @@
         return this.ratings.filter((rating) => {
           return rating.rateType === NEGATIVE;
         });
+      },
+      selectType () {
+        return this.$store.state.selectType;
+      },
+      isOnlyContent() {
+        return this.$store.state.isOnlyContent;
       }
     }
   };

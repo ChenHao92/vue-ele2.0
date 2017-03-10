@@ -25,9 +25,7 @@
         </div>
       </div>
       <split></split>
-      <rating-select :select-type="selectType"
-                     :is-only-content="isOnlyContent"
-                     :desc="desc"
+      <rating-select :desc="desc"
                      :ratings="ratings">
       </rating-select>
       <ul class="comments">
@@ -95,8 +93,6 @@
     data () {
       return {
         ratings: [],
-        selectType: ALL,
-        isOnlyContent: false,
         desc: {
           all: '全部',
           positive: '满意',
@@ -114,38 +110,19 @@
             return rating.text !== '';
           });
         }
+      },
+      selectType () {
+        console.log("changeselectType");
+        return this.$store.state.selectType;
+      },
+      isOnlyContent () {
+        return this.$store.state.isOnlyContent;
       }
     },
     components: {
       star,
       split,
       ratingSelect
-    },
-    events: {
-      'ratingTypeChanged': function (type) {
-        this.selectType = type;
-        this.$nextTick(() => {
-          if (!this.scroll) {
-            this.scroll = new BScroll(this.$refs.ratings, {
-              click: true
-            });
-          } else {
-            this.scroll.refresh();
-          }
-        });
-      },
-      'isOnlyContentChanged': function (value) {
-        this.isOnlyContent = value;
-        this.$nextTick(() => {
-          if (!this.scroll) {
-            this.scroll = new BScroll(this.$refs.ratings, {
-              click: true
-            });
-          } else {
-            this.scroll.refresh();
-          }
-        });
-      }
     },
     filters: {
       formatDate (time) {

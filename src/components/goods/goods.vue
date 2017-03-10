@@ -54,10 +54,8 @@
     },
     data () {
       return {
-        goods: [],
         listHeight: [],
-        scrollY: 0,
-        selectedFood: {}
+        scrollY: 0
       };
     },
     computed: {
@@ -80,14 +78,21 @@
             }
           });
         });
+        this.$store.commit('setSelectedFoods', foods);
         return foods;
+      },
+      selectedFood () {
+        return this.$store.state.selectFood;
+      },
+      goods () {
+        return this.$store.state.goods;
       }
     },
     created () {
       this.$http.get('/api/goods').then((response) => {
         response = response.body;
         if (response.errno === ERR_OK) {
-          this.goods = response.data;
+          this.$store.commit('initGoods', response.data);
           this.$nextTick(() => {
             this._initScroll();
             this._caclLHeight();
@@ -133,7 +138,7 @@
         if (!event._constructed) {
           return;
         }
-        this.selectedFood = food;
+        this.$store.commit('changeSelectFood', food);
         this.$refs.food.show();
       }
     },

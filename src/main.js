@@ -1,10 +1,12 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import VueResource from 'vue-resource';
+import Vuex from 'vuex';
 import App from './App';
 import goods from './components/goods/goods';
 import ratings from './components/ratings/ratings';
 import sellers from './components/sellers/sellers';
+import {store} from './store/store';
 
 import './common/stylus/index.styl';
 
@@ -26,5 +28,6 @@ let router = new VueRouter({
 
 const app2 = new Vue({
   router: router,
+  store,
   render: h => h(App)
 }).$mount('#app');
